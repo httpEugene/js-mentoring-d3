@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Pie layout</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/pie.html
+    </comment>
+</head>
+
+<body>
+<svg width="800" height="600">
+    <g class="pie" transform="translate(120, 120)"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+
+    var data = [
+        {name: 'Apples', percent: 40},
+        {name: 'Oranges', percent: 30},
+        {name: 'Bananas', percent: 10},
+        {name: 'Grapes', percent: 20}
+    ];
+
+    var pieLayout = d3.layout.pie()
+            .value((d) => d.percent);
+
+    var segments = pieLayout(data);
+
+    var arcGenerator = d3.svg.arc()
+            .innerRadius(50)
+            .outerRadius(100);
+
+    var colorScale = d3.scale.category10();
+
+    d3.select('svg g.pie')
+            .selectAll('path')
+            .data(segments)
+            .enter()
+            .append('path')
+            .attr('d', arcGenerator)
+            .style('fill', (d, i) => colorScale(i));
+
+</script>
+</body>
+</html>

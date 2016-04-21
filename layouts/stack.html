@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Stack layout</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/stack.html
+    </comment>
+</head>
+
+<body>
+<svg width="800" height="600">
+    <g class="stack" transform="translate(20, 20)"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+
+    var data = [
+        [{x: 0, y: 10}, {x: 1, y: 40}, {x: 2, y: 30}, {x: 3, y: 40}, {x: 4, y: 10}],
+        [{x: 0, y: 20}, {x: 1, y: 10}, {x: 2, y: 20}, {x: 3, y: 20}, {x: 4, y: 10}],
+        [{x: 0, y: 40}, {x: 1, y: 30}, {x: 2, y: 20}, {x: 3, y: 20}, {x: 4, y: 30}]
+    ];
+
+    var xScale = d3.scale.linear().domain([0, 4]).range([0, 800]);
+    var yScale = d3.scale.linear().domain([0, 100]).range([200, 0]);
+
+    var stackLayout = d3.layout.stack();
+    data = stackLayout(data);
+
+    var areaGenerator = d3.svg.area()
+            .x(function(d) {return xScale(d.x);})
+            .y0(function(d) {return yScale(d.y0);})  // baseline
+            .y1(function(d) {return yScale(d.y0 + d.y);});
+
+    var colorScale = d3.scale.category10();
+
+    d3.select('svg g.stack')
+            .selectAll('path')
+            .data(data)
+            .enter()
+            .append('path')
+            .attr('d', areaGenerator)
+            .attr('fill', function(d, i) {return colorScale(i);});
+
+</script>
+</body>
+</html>

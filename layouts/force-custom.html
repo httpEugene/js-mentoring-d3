@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Force Layout 2 - Force layout with foci</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/force-foci.html
+    </comment>
+</head>
+
+<body>
+<svg width="600" height="300">
+    <g class="force"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+
+    var data = [], foci = [], nodes;
+    var colorScale = d3.scale.category20();
+
+    var forceLayout = d3.layout.force()
+            .size([500, 500])
+            .gravity(0)
+            .on('tick', update);
+
+    /*--
+     INIT
+     --*/
+    function initData() {
+        data = d3.range(200).map(function(d, i) {
+            return {group: i % 3};
+        });
+
+        foci = d3.range(3).map(function(d, i) {
+            return {x: 100 + 200 * i, y: 200};
+        });
+    }
+
+    function update(e) {
+        // Push nodes toward the foci
+        var k = 0.5 * e.alpha;
+        nodes
+                .attr('cx', function(d) {
+                    d.x += (foci[d.group].x - d.x) * k;
+                    return d.x;
+                })
+                .attr('cy', function(d) {
+                    d.y += (foci[d.group].y - d.y) * k;
+                    return d.y;
+                });
+    }
+
+    function createNodes() {
+        // Create nodes
+        nodes = d3.select('svg g.force')
+                .selectAll('circle')
+                .data(data)
+                .enter()
+                .append('circle')
+                .attr('r', 5)
+                .style('fill', function(d) {return colorScale(d.group);});
+    }
+
+    initData();
+    createNodes();
+
+    // Run the force layout
+    forceLayout
+            .nodes(data)
+            .start();
+
+</script>
+</body>
+</html>

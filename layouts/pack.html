@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Pack layout</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/pack.html
+    </comment>
+</head>
+
+<style>
+    g.pack circle {
+        fill: cadetblue;
+        opacity: 0.3;
+    }
+</style>
+
+<body>
+
+<svg width="800" height="600">
+    <g class="pack" transform="translate(50, 100)"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+    var packLayout = d3.layout.pack()
+            .size([400, 400])
+            .padding(4);
+
+    d3.json('data/tree.json', function(err, data) {
+        var nodes = packLayout(data);
+
+        // Draw circles
+        d3.select('svg g.pack')
+                .selectAll('circle')
+                .data(nodes)
+                .enter()
+                .append('circle')
+                .attr('cx', function(d) {return d.x;})
+                .attr('cy', function(d) {return d.y;})
+                .attr('r', function(d) {return d.r;});
+    });
+
+</script>
+</body>
+</html>

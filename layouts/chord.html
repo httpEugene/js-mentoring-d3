@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Chord Layout</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/chord.html
+    </comment>
+</head>
+
+<style>
+    path {
+        stroke: white;
+        stroke-width: 0.5px;
+        opacity: 0.7;
+    }
+</style>
+
+<body>
+<svg width="800" height="600">
+    <g class="chord" transform="translate(250, 250)"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+
+    var data = [], numNodes = 5;
+    var radius = 200;
+    var chord = d3.layout.chord();
+    var colorScale = d3.scale.category10();
+
+    /*--
+     INIT
+     --*/
+    function initData() {
+        data.nodes = d3.range(numNodes).map(function() {return {};});
+
+        for(var i=0; i<numNodes; i++) {
+            var row = [];
+            for(var j=0; j<numNodes; j++) {
+                row.push(Math.random() * 100);
+            }
+            data.push(row);
+        }
+    }
+
+
+    function update() {
+        chord.matrix(data);
+
+        d3.select('.chord')
+                .selectAll('path.chord')
+                .data(chord.chords())
+                .enter()
+                .append('path')
+                .classed('chord', true)
+                .attr('d', d3.svg.chord().radius(radius))
+                .style('fill', function(d) {
+                    return colorScale(d.source.index);
+                })
+                .style('opacity', 0.5);
+
+        d3.select('.chord')
+                .selectAll('path.group')
+                .data(chord.groups())
+                .enter()
+                .append('path')
+                .classed('group', true)
+                .attr('d', d3.svg.arc().innerRadius(radius).outerRadius(radius+20))
+                .style('fill', function(d) {
+                    return colorScale(d.index);
+                });
+    }
+
+
+    initData();
+    update();
+
+
+</script>
+</body>
+</html>

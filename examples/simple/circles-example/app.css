@@ -1,0 +1,7 @@
+circle {
+    r: 20;
+    cy: 50;
+    fill: orange;
+    display: block;
+    margin-left:50px;
+}

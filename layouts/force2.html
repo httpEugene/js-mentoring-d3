@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Force Layout (Fundamental)</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/force-fundamental.html
+    </comment>
+</head>
+
+<style>
+    line {
+        stroke: #ccc;
+    }
+    circle {
+        fill: cadetblue;
+    }
+</style>
+
+<body>
+<svg width="800" height="600">
+    <g class="force"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+
+    var data = {nodes: [], links: []}, nodes, links, numNodes = 60;
+
+    var forceLayout = d3.layout.force()
+        // .gravity(0.1)
+        // .friction(0.1)
+        // .charge(-100)
+        // .linkDistance(10)
+        // .linkStrength(1)
+            .size([500, 500])
+            .on('tick', update);
+
+    /*--
+     INIT
+     --*/
+    function initData() {
+        data.nodes = d3.range(numNodes).map(function() {return {};});
+
+        var linkChance = 0.015;
+        for(var i=0; i<numNodes; i++) {
+            for(var j=0; j<numNodes; j++) {
+                if(Math.random() < linkChance)
+                    data.links.push({source: i, target: j});
+            }
+        }
+    }
+
+
+    function update() {
+        links
+                .attr('x1', function(d) {return d.source.x;})
+                .attr('y1', function(d) {return d.source.y;})
+                .attr('x2', function(d) {return d.target.x;})
+                .attr('y2', function(d) {return d.target.y;});
+
+        nodes
+                .attr('cx', function(d) {return d.x;})
+                .attr('cy', function(d) {return d.y;});
+    }
+
+    function createNodes() {
+        links = d3.select('svg g.force')
+                .selectAll('line')
+                .data(data.links)
+                .enter()
+                .append('line');
+
+        nodes = d3.select('svg g.force')
+                .selectAll('circle')
+                .data(data.nodes)
+                .enter()
+                .append('circle')
+                .attr('r', 2);
+    }
+
+    initData();
+    createNodes();
+
+    // Run the force layout
+    forceLayout
+            .nodes(data.nodes)
+            .links(data.links)
+            .start();
+
+</script>
+</body>
+</html>

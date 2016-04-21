@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Tree layout</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/tree.html
+    </comment>
+</head>
+
+<style>
+    .node {
+        fill: steelblue;
+        stroke: none;
+    }
+    .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 1px;
+    }
+</style>
+
+<body>
+<svg width="500" height="450">
+    <g class="tree" transform="translate(00, 20)"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+    // Tree layout
+    var treeLayout = d3.layout.tree()
+            .size([500, 400]);
+
+    d3.json('data/tree.json', function(err, data) {
+        var nodes = treeLayout(data);
+        var links = treeLayout.links(nodes);
+
+        console.log(data, nodes, links);
+
+        // Draw links
+        d3.select('svg g.tree')
+                .selectAll('line.link')
+                .data(links)
+                .enter()
+                .append('line')
+                .classed('link', true)
+                .attr('x1', (d) => d.source.x)
+                .attr('y1', (d) => d.source.y)
+                .attr('x2', (d) => d.target.x)
+                .attr('y2', (d) => d.target.y);
+
+        // Draw nodes
+        d3.select('svg g.tree')
+                .selectAll('circle.node')
+                .data(nodes)
+                .enter()
+                .append('circle')
+                .classed('node', true)
+                .attr('cx', (d) => d.x)
+                .attr('cy', (d) => d.y)
+                .attr('r', 4);
+    });
+</script>
+</body>
+</html>

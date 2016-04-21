@@ -1,0 +1,9 @@
+{
+  "firebase": "epam-d3",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

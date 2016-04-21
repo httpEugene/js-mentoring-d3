@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <title>Partition layout</title>
+    <comment style="display: none">
+        Created by http://animateddata.co.uk/
+        Source: http://animateddata.co.uk/slides/d3-layouts/partition-circular.html
+    </comment>
+</head>
+
+<style>
+    g.partition rect {
+        fill: indianred;
+        stroke: white;
+    }
+    g.partition path {
+        fill: indianred;
+        stroke: white;
+    }
+</style>
+
+<body>
+
+<svg width="800" height="600">
+    <g class="partition" transform="translate(200, 200)"></g>
+</svg>
+
+<script src="d3.js"></script>
+<script>
+    var partitionLayout = d3.layout.partition()
+            .size([2 * Math.PI, 200]);
+
+    d3.json('data/tree.json', function(err, data) {
+        var nodes = partitionLayout(data);
+
+        var arc = d3.svg.arc()
+                .startAngle(function(d) { return d.x; })
+                .endAngle(function(d) { return d.x + d.dx; })
+                .innerRadius(function(d) { return d.y; })
+                .outerRadius(function(d) { return d.y + d.dy; });
+
+        d3.select('svg g.partition')
+                .selectAll('path')
+                .data(nodes)
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('display', function(d) { return d.depth ? null : 'none'; }) // hide inner ring
+                .style('opacity', function(d) {return 1 - d.depth * 0.2;});
+    });
+
+</script>
+</body>
+</html>
