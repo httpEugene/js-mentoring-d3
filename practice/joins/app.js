@@ -39,9 +39,3 @@ function getRandomCoefficient() {
 function getRandomIndex(arrayLength) {
 	return Math.floor(Math.random() * arrayLength);
 }
-
-var x = d3.scale.linear()
-    .domain([12, 24])
-    .range(["0px", "720px"]);
-
-    console.log(x(14));
